@@ -42,13 +42,21 @@
 
 <h2>📋 Tarefas</h2>
 
-{% for t in tarefas %}
-<div>
-<b>{{ t.horario }}</b> — {{ t.titulo }}<br>
-Prioridade: {{ t.prioridade }}
-{% if not t.concluida %}
-<br><a href="/concluir/{{ loop.index0 }}">✔ Concluir</a>
-{% endif %}
+{% for tarefa in tarefas %}
+<div class="tarefa-item">
+
+  <a href="/toggle/{{ loop.index0 }}">
+    <button>✔</button>
+  </a>
+
+  <span class="{% if tarefa.concluida %}concluida{% endif %}">
+    {{ tarefa.titulo }} — {{ tarefa.horario }} — {{ tarefa.prioridade }}
+  </span>
+
+  <a href="/remover/{{ loop.index0 }}">
+    <button class="remover">🗑</button>
+  </a>
+
 </div>
 {% endfor %}
 
