@@ -1,69 +1,96 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planner Diário</title>
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#4682B4">
+<html lang="pt-BR">
+
+        .acoes {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-toggle {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-remove {
+            background: #ef4444;
+            color: white;
+        }
+
+        .empty {
+            text-align: center;
+            opacity: 0.6;
+            padding: 20px;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 720px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body style.concluida {
-  text-decoration: line-through;
-  opacity: 0.6;
-}
+<body>
 
-.tarefa-item {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin: 8px 0;
-}
+<div class="container">
 
-.remover {
-  background: #ff4d4d;
-  border: none;
-  color: royalblue;
-  padding: 4px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-}>
-<h1>📅 Planner Diário</h1>
+    <div class="header">
+        <div class="title">📅 Planner Day</div>
+        <div class="subtitle">Organize seu dia com estilo</div>
+    </div>
 
-<form method="POST" action="/adicionar">
-<input name="titulo" placeholder="Nova tarefa" required>
-<input type="time" name="horario" required>
-<select name="prioridade">
-<option value="alta">🔥 Alta</option>
-<option value="media">⚡ Média</option>
-<option value="baixa">🌱 Baixa</option>
-</select>
-<button type="submit">Adicionar</button>
-</form>
+    <!-- FORM -->
+    <div class="card">
+        <form action="/adicionar" method="POST" class="form-grid">
+            <input class="input" name="titulo" placeholder="Nova tarefa..." required>
+            <input class="input" type="time" name="horario" required>
 
-<h2>📋 Tarefas</h2>
+            <select class="select" name="prioridade">
+                <option value="alta">Alta</option>
+                <option value="media">Média</option>
+                <option value="baixa">Baixa</option>
+            </select>
 
-{% for tarefa in tarefas %}
-<div class="tarefa-item">
+            <button class="btn btn-add">Adicionar</button>
+        </form>
+    </div>
 
-  <a href="/toggle/{{ loop.index0 }}">
-    <button>✔</button>
-  </a>
+    <!-- LISTA -->
+    <div class="card">
+        <div class="lista">
 
-  <span class="{% if tarefa.concluida %}concluida{% endif %}">
-    {{ tarefa.titulo }} — {{ tarefa.horario }} — {{ tarefa.prioridade }}
-  </span>
+            {% if tarefas %}
+                {% for t in tarefas %}
+                <div class="tarefa">
 
-  <a href="/remover/{{ loop.index0 }}">
-    <button class="remover">🗑</button>
-  </a>
+                    <div class="tarefa-info {% if t.concluida %}concluida{% endif %}">
+                        <div>
+                            <strong>{{ t.titulo }}</strong><br>
+                            <small>{{ t.horario }}</small>
+                        </div>
+                        <span class="badge {{ t.prioridade }}">
+                            {{ t.prioridade|capitalize }}
+                        </span>
+                    </div>
+
+                    <div class="acoes">
+                        <a href="/toggle/{{ loop.index0 }}">
+                            <button class="btn btn-toggle">✔</button>
+                        </a>
+                        <a href="/remover/{{ loop.index0 }}">
+                            <button class="btn btn-remove">🗑</button>
+                        </a>
+                    </div>
+
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty">Nenhuma tarefa ainda 🚀</div>
+            {% endif %}
+
+        </div>
+    </div>
 
 </div>
-{% endfor %}
 
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/static/sw.js");
-}
-</script>
 </body>
 </html>
